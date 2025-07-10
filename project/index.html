@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Auto-Complete & Spell Checker Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <div class="logo-icon">🔍</div>
+                    <h1>SpellCheck Pro</h1>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-view="editor">
+                    <span class="nav-icon">✏️</span>
+                    Text Editor
+                </a>
+                <a href="#" class="nav-item" data-view="analytics">
+                    <span class="nav-icon">📊</span>
+                    Analytics
+                </a>
+                <a href="#" class="nav-item" data-view="dictionary">
+                    <span class="nav-icon">📚</span>
+                    Dictionary
+                </a>
+                <a href="#" class="nav-item" data-view="settings">
+                    <span class="nav-icon">⚙️</span>
+                    Settings
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-content">
+                    <h2 id="page-title">Text Editor</h2>
+                    <div class="header-actions">
+                        <button class="btn btn-secondary" id="export-btn">Export Report</button>
+                        <button class="btn btn-primary" id="clear-btn">Clear Text</button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Editor View -->
+            <div id="editor-view" class="view active">
+                <div class="editor-container">
+                    <div class="editor-panel">
+                        <div class="editor-header">
+                            <h3>Real-Time Text Editor</h3>
+                            <div class="editor-stats">
+                                <span class="stat">Words: <span id="word-count">0</span></span>
+                                <span class="stat">Characters: <span id="char-count">0</span></span>
+                                <span class="stat">Errors: <span id="error-count">0</span></span>
+                            </div>
+                        </div>
+                        <div class="editor-wrapper">
+                            <textarea 
+                                id="text-editor" 
+                                placeholder="Start typing to see real-time auto-complete and spell checking in action..."
+                                spellcheck="false"
+                            ></textarea>
+                            <div id="suggestions-dropdown" class="suggestions-dropdown"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="suggestions-panel">
+                        <h3>Live Suggestions</h3>
+                        <div id="live-suggestions" class="suggestion-list"></div>
+                        
+                        <h3>Spell Check Results</h3>
+                        <div id="spell-errors" class="error-list"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics View -->
+            <div id="analytics-view" class="view">
+                <div class="analytics-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">📝</div>
+                        <div class="stat-content">
+                            <h3 id="total-words">0</h3>
+                            <p>Total Words Processed</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🔍</div>
+                        <div class="stat-content">
+                            <h3 id="total-suggestions">0</h3>
+                            <p>Suggestions Generated</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">❌</div>
+                        <div class="stat-content">
+                            <h3 id="total-errors">0</h3>
+                            <p>Spelling Errors Found</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">⚡</div>
+                        <div class="stat-content">
+                            <h3 id="avg-response">0ms</h3>
+                            <p>Average Response Time</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="charts-container">
+                    <div class="chart-panel">
+                        <h3>Most Frequent Words</h3>
+                        <div id="word-frequency" class="frequency-chart"></div>
+                    </div>
+                    <div class="chart-panel">
+                        <h3>Common Spelling Errors</h3>
+                        <div id="error-frequency" class="frequency-chart"></div>
+                    </div>
+                </div>
+
+                <div class="recent-activity">
+                    <h3>Recent Activity</h3>
+                    <div id="activity-log" class="activity-list"></div>
+                </div>
+            </div>
+
+            <!-- Dictionary View -->
+            <div id="dictionary-view" class="view">
+                <div class="dictionary-container">
+                    <div class="dictionary-header">
+                        <h3>Dictionary Management</h3>
+                        <div class="dictionary-actions">
+                            <input type="text" id="new-word" placeholder="Add new word..." class="input">
+                            <button id="add-word-btn" class="btn btn-primary">Add Word</button>
+                        </div>
+                    </div>
+                    
+                    <div class="dictionary-stats">
+                        <div class="dict-stat">
+                            <span class="label">Total Words:</span>
+                            <span id="dict-total">0</span>
+                        </div>
+                        <div class="dict-stat">
+                            <span class="label">Custom Words:</span>
+                            <span id="dict-custom">0</span>
+                        </div>
+                    </div>
+
+                    <div class="word-search">
+                        <input type="text" id="word-search" placeholder="Search dictionary..." class="input">
+                    </div>
+
+                    <div id="dictionary-list" class="dictionary-list"></div>
+                </div>
+            </div>
+
+            <!-- Settings View -->
+            <div id="settings-view" class="view">
+                <div class="settings-container">
+                    <div class="settings-section">
+                        <h3>Auto-Complete Settings</h3>
+                        <div class="setting-item">
+                            <label for="max-suggestions">Maximum Suggestions:</label>
+                            <input type="range" id="max-suggestions" min="3" max="10" value="5" class="slider">
+                            <span id="max-suggestions-value">5</span>
+                        </div>
+                        <div class="setting-item">
+                            <label for="min-word-length">Minimum Word Length for Suggestions:</label>
+                            <input type="range" id="min-word-length" min="1" max="5" value="2" class="slider">
+                            <span id="min-word-length-value">2</span>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3>Spell Check Settings</h3>
+                        <div class="setting-item">
+                            <label for="edit-distance">Maximum Edit Distance:</label>
+                            <input type="range" id="edit-distance" min="1" max="5" value="2" class="slider">
+                            <span id="edit-distance-value">2</span>
+                        </div>
+                        <div class="setting-item">
+                            <label>
+                                <input type="checkbox" id="case-sensitive" class="checkbox">
+                                Case Sensitive Checking
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <label>
+                                <input type="checkbox" id="real-time-check" class="checkbox" checked>
+                                Real-time Spell Checking
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3>Performance Settings</h3>
+                        <div class="setting-item">
+                            <label for="debounce-delay">Debounce Delay (ms):</label>
+                            <input type="range" id="debounce-delay" min="100" max="1000" value="300" step="50" class="slider">
+                            <span id="debounce-delay-value">300</span>
+                        </div>
+                    </div>
+
+                    <div class="settings-actions">
+                        <button id="reset-settings" class="btn btn-secondary">Reset to Defaults</button>
+                        <button id="save-settings" class="btn btn-primary">Save Settings</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="trie.js"></script>
+    <script src="spellchecker.js"></script>
+    <script src="analytics.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

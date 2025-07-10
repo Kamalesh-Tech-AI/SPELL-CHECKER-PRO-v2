@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpellCheck Pro - Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 450px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #3B82F6, #1D4ED8);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 1rem;
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+        }
+
+        .logo h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+        }
+
+        .logo p {
+            color: #64748b;
+            font-size: 0.875rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            background: white;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .login-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #3B82F6, #1D4ED8);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 2rem;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        .login-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .demo-accounts {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid #e2e8f0;
+        }
+
+        .demo-accounts h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .account-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            border: 1px solid #e2e8f0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .account-card:hover {
+            border-color: #3B82F6;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .account-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .account-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .account-role {
+            font-weight: 600;
+            color: #1e293b;
+            font-size: 0.875rem;
+        }
+
+        .account-badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .admin-badge {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .user-badge {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+
+        .account-credentials {
+            font-size: 0.75rem;
+            color: #64748b;
+            font-family: 'Courier New', monospace;
+        }
+
+        .error-message {
+            background: #fee2e2;
+            color: #dc2626;
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+            text-align: center;
+            border: 1px solid #fecaca;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 0.5rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 2rem 1.5rem;
+            }
+            
+            .logo h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo">
+            <div class="logo-icon">🔍</div>
+            <h1>SpellCheck Pro</h1>
+            <p>Real-Time Auto-Complete & Spell Checker</p>
+        </div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+
+            <div id="errorMessage" class="error-message" style="display: none;"></div>
+
+            <button type="submit" class="login-btn" id="loginBtn">
+                Sign In
+            </button>
+        </form>
+
+        <div class="demo-accounts">
+            <h3>Demo Accounts</h3>
+            
+            <div class="account-card" onclick="fillCredentials('admin', 'admin123')">
+                <div class="account-header">
+                    <span class="account-role">Administrator</span>
+                    <span class="account-badge admin-badge">Admin</span>
+                </div>
+                <div class="account-credentials">Username: admin | Password: admin123</div>
+                <div style="font-size: 0.75rem; color: #64748b; margin-top: 0.25rem;">
+                    Full access to dictionary management and analytics
+                </div>
+            </div>
+
+            <div class="account-card" onclick="fillCredentials('user', 'user123')">
+                <div class="account-header">
+                    <span class="account-role">Regular User</span>
+                    <span class="account-badge user-badge">User</span>
+                </div>
+                <div class="account-credentials">Username: user | Password: user123</div>
+                <div style="font-size: 0.75rem; color: #64748b; margin-top: 0.25rem;">
+                    Access to text editor and spell checking features
+                </div>
+            </div>
+
+            <div class="account-card" onclick="fillCredentials('student', 'student123')">
+                <div class="account-header">
+                    <span class="account-role">Student</span>
+                    <span class="account-badge user-badge">User</span>
+                </div>
+                <div class="account-credentials">Username: student | Password: student123</div>
+                <div style="font-size: 0.75rem; color: #64748b; margin-top: 0.25rem;">
+                    Learning-focused interface with guided features
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mock user database
+        const users = [
+            {
+                username: 'admin',
+                password: 'admin123',
+                role: 'admin',
+                name: 'Administrator',
+                permissions: ['read', 'write', 'delete', 'manage_users', 'view_analytics']
+            },
+            {
+                username: 'user',
+                password: 'user123',
+                role: 'user',
+                name: 'Regular User',
+                permissions: ['read', 'write']
+            },
+            {
+                username: 'student',
+                password: 'student123',
+                role: 'user',
+                name: 'Student User',
+                permissions: ['read', 'write']
+            }
+        ];
+
+        // DOM elements
+        const loginForm = document.getElementById('loginForm');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const loginBtn = document.getElementById('loginBtn');
+        const errorMessage = document.getElementById('errorMessage');
+
+        // Fill credentials function for demo accounts
+        function fillCredentials(username, password) {
+            usernameInput.value = username;
+            passwordInput.value = password;
+            hideError();
+        }
+
+        // Show error message
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+        }
+
+        // Hide error message
+        function hideError() {
+            errorMessage.style.display = 'none';
+        }
+
+        // Show loading state
+        function showLoading() {
+            loginBtn.innerHTML = '<span class="loading"></span>Signing in...';
+            loginBtn.disabled = true;
+        }
+
+        // Hide loading state
+        function hideLoading() {
+            loginBtn.innerHTML = 'Sign In';
+            loginBtn.disabled = false;
+        }
+
+        // Authenticate user
+        function authenticateUser(username, password) {
+            return users.find(user => 
+                user.username === username && user.password === password
+            );
+        }
+
+        // Handle form submission
+        loginForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            hideError();
+            
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value.trim();
+
+            if (!username || !password) {
+                showError('Please enter both username and password');
+                return;
+            }
+
+            showLoading();
+
+            // Simulate API call delay
+            setTimeout(() => {
+                const user = authenticateUser(username, password);
+                
+                if (user) {
+                    // Store user session
+                    sessionStorage.setItem('currentUser', JSON.stringify({
+                        username: user.username,
+                        role: user.role,
+                        name: user.name,
+                        permissions: user.permissions,
+                        loginTime: new Date().toISOString()
+                    }));
+
+                    // Redirect based on role
+                    if (user.role === 'admin') {
+                        window.location.href = 'admin-dashboard.html';
+                    } else {
+                        window.location.href = 'index.html';
+                    }
+                } else {
+                    hideLoading();
+                    showError('Invalid username or password. Please try again.');
+                }
+            }, 1000);
+        });
+
+        // Check if user is already logged in
+        window.addEventListener('load', function() {
+            const currentUser = sessionStorage.getItem('currentUser');
+            if (currentUser) {
+                const user = JSON.parse(currentUser);
+                if (user.role === 'admin') {
+                    window.location.href = 'admin-dashboard.html';
+                } else {
+                    window.location.href = 'index.html';
+                }
+            }
+        });
+
+        // Clear error on input
+        usernameInput.addEventListener('input', hideError);
+        passwordInput.addEventListener('input', hideError);
+    </script>
+</body>
+</html>

@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - SpellCheck Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .admin-header {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(220, 38, 38, 0.2);
+        }
+
+        .admin-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .admin-badge {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .admin-controls {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+        }
+
+        .admin-controls h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 1rem;
+        }
+
+        .control-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .control-btn {
+            background: linear-gradient(135deg, #3B82F6, #1D4ED8);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .control-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+        }
+
+        .control-btn.danger {
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+        }
+
+        .control-btn.danger:hover {
+            box-shadow: 0 8px 20px rgba(220, 38, 38, 0.3);
+        }
+
+        .word-management {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+        }
+
+        .add-word-form {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .add-word-form input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 0.875rem;
+        }
+
+        .add-word-form input:focus {
+            outline: none;
+            border-color: #3B82F6;
+        }
+
+        .word-list {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+        }
+
+        .word-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .word-item:last-child {
+            border-bottom: none;
+        }
+
+        .word-item:hover {
+            background: #f8fafc;
+        }
+
+        .delete-word-btn {
+            background: #fee2e2;
+            color: #dc2626;
+            border: none;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: background-color 0.2s ease;
+        }
+
+        .delete-word-btn:hover {
+            background: #fecaca;
+        }
+
+        .stats-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #64748b;
+            font-size: 0.875rem;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #64748b;
+        }
+
+        .bulk-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .bulk-actions button {
+            padding: 0.5rem 1rem;
+            border: 1px solid #e2e8f0;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+        }
+
+        .bulk-actions button:hover {
+            background: #f8fafc;
+        }
+
+        .bulk-actions button.active {
+            background: #3B82F6;
+            color: white;
+            border-color: #3B82F6;
+        }
+    </style>
+</head>
+<body>
+    <!-- Admin Header -->
+    <div class="admin-header">
+        <div class="admin-title">
+            <div class="logo-icon">🔍</div>
+            <div>
+                <h1>SpellCheck Pro</h1>
+                <span class="admin-badge">Administrator Panel</span>
+            </div>
+        </div>
+        <div class="user-info">
+            <span id="adminName">Welcome, Admin</span>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <div class="logo-icon">⚙️</div>
+                    <h1>Admin Panel</h1>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-view="overview">
+                    <span class="nav-icon">📊</span>
+                    Overview
+                </a>
+                <a href="#" class="nav-item" data-view="dictionary">
+                    <span class="nav-icon">📚</span>
+                    Dictionary Management
+                </a>
+                <a href="#" class="nav-item" data-view="analytics">
+                    <span class="nav-icon">📈</span>
+                    Analytics
+                </a>
+                <a href="#" class="nav-item" data-view="users">
+                    <span class="nav-icon">👥</span>
+                    User Management
+                </a>
+                <a href="#" class="nav-item" data-view="settings">
+                    <span class="nav-icon">⚙️</span>
+                    System Settings
+                </a>
+                <a href="index.html" class="nav-item">
+                    <span class="nav-icon">✏️</span>
+                    Text Editor
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Overview View -->
+            <div id="overview-view" class="view active">
+                <div style="padding: 2rem;">
+                    <h2 style="font-size: 1.5rem; font-weight: 600; color: #1e293b; margin-bottom: 2rem;">System Overview</h2>
+                    
+                    <div class="stats-overview">
+                        <div class="stat-card">
+                            <div class="stat-number" id="totalWords">0</div>
+                            <div class="stat-label">Total Words in Dictionary</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="customWords">0</div>
+                            <div class="stat-label">Custom Words Added</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="totalSessions">0</div>
+                            <div class="stat-label">User Sessions Today</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="totalErrors">0</div>
+                            <div class="stat-label">Errors Detected</div>
+                        </div>
+                    </div>
+
+                    <div class="admin-controls">
+                        <h3>Quick Actions</h3>
+                        <div class="control-grid">
+                            <button class="control-btn" onclick="exportDictionary()">
+                                📥 Export Dictionary
+                            </button>
+                            <button class="control-btn" onclick="showImportModal()">
+                                📤 Import Dictionary
+                            </button>
+                            <button class="control-btn" onclick="generateReport()">
+                                📋 Generate Report
+                            </button>
+                            <button class="control-btn danger" onclick="resetSystem()">
+                                🔄 Reset System
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dictionary Management View -->
+            <div id="dictionary-view" class="view">
+                <div style="padding: 2rem;">
+                    <h2 style="font-size: 1.5rem; font-weight: 600; color: #1e293b; margin-bottom: 2rem;">Dictionary Management</h2>
+                    
+                    <div class="word-management">
+                        <h3>Add New Words</h3>
+                        <div class="add-word-form">
+                            <input type="text" id="newWordInput" placeholder="Enter word to add..." onkeypress="handleAddWordKeypress(event)">
+                            <button class="btn btn-primary" onclick="addNewWord()">Add Word</button>
+                        </div>
+                        
+                        <div class="bulk-actions">
+                            <button onclick="showBulkImport()">Bulk Import</button>
+                            <button onclick="exportCustomWords()">Export Custom Words</button>
+                            <button onclick="clearCustomWords()" class="danger">Clear All Custom</button>
+                        </div>
+                    </div>
+
+                    <div class="word-management">
+                        <h3>Dictionary Contents</h3>
+                        <div style="margin-bottom: 1rem;">
+                            <input type="text" id="searchWords" placeholder="Search words..." oninput="filterWords()" style="width: 100%; padding: 0.75rem; border: 2px solid #e2e8f0; border-radius: 8px;">
+                        </div>
+                        <div class="word-list" id="wordList">
+                            <!-- Words will be populated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics View -->
+            <div id="analytics-view" class="view">
+                <div style="padding: 2rem;">
+                    <h2 style="font-size: 1.5rem; font-weight: 600; color: #1e293b; margin-bottom: 2rem;">System Analytics</h2>
+                    
+                    <div class="analytics-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">📝</div>
+                            <div class="stat-content">
+                                <h3 id="analyticsWords">0</h3>
+                                <p>Words Processed</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">🔍</div>
+                            <div class="stat-content">
+                                <h3 id="analyticsSuggestions">0</h3>
+                                <p>Suggestions Generated</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">❌</div>
+                            <div class="stat-content">
+                                <h3 id="analyticsErrors">0</h3>
+                                <p>Errors Found</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">⚡</div>
+                            <div class="stat-content">
+                                <h3 id="analyticsResponse">0ms</h3>
+                                <p>Avg Response Time</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="charts-container">
+                        <div class="chart-panel">
+                            <h3>Most Frequent Words</h3>
+                            <div id="adminWordFrequency" class="frequency-chart"></div>
+                        </div>
+                        <div class="chart-panel">
+                            <h3>Common Errors</h3>
+                            <div id="adminErrorFrequency" class="frequency-chart"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- User Management View -->
+            <div id="users-view" class="view">
+                <div style="padding: 2rem;">
+                    <h2 style="font-size: 1.5rem; font-weight: 600; color: #1e293b; margin-bottom: 2rem;">User Management</h2>
+                    
+                    <div class="admin-controls">
+                        <h3>User Statistics</h3>
+                        <div class="stats-overview">
+                            <div class="stat-card">
+                                <div class="stat-number">3</div>
+                                <div class="stat-label">Total Users</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number">1</div>
+                                <div class="stat-label">Active Sessions</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number">2</div>
+                                <div class="stat-label">Regular Users</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number">1</div>
+                                <div class="stat-label">Administrators</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="word-management">
+                        <h3>User List</h3>
+                        <div class="word-list">
+                            <div class="word-item">
+                                <div>
+                                    <strong>admin</strong> - Administrator
+                                    <div style="font-size: 0.75rem; color: #64748b;">Last login: Today</div>
+                                </div>
+                                <span style="color: #10B981; font-size: 0.75rem;">Online</span>
+                            </div>
+                            <div class="word-item">
+                                <div>
+                                    <strong>user</strong> - Regular User
+                                    <div style="font-size: 0.75rem; color: #64748b;">Last login: Yesterday</div>
+                                </div>
+                                <span style="color: #64748b; font-size: 0.75rem;">Offline</span>
+                            </div>
+                            <div class="word-item">
+                                <div>
+                                    <strong>student</strong> - Student
+                                    <div style="font-size: 0.75rem; color: #64748b;">Last login: 2 days ago</div>
+                                </div>
+                                <span style="color: #64748b; font-size: 0.75rem;">Offline</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings View -->
+            <div id="settings-view" class="view">
+                <div style="padding: 2rem;">
+                    <h2 style="font-size: 1.5rem; font-weight: 600; color: #1e293b; margin-bottom: 2rem;">System Settings</h2>
+                    
+                    <div class="settings-container">
+                        <div class="settings-section">
+                            <h3>Dictionary Settings</h3>
+                            <div class="setting-item">
+                                <label for="maxSuggestions">Maximum Suggestions:</label>
+                                <input type="range" id="maxSuggestions" min="3" max="10" value="5" class="slider">
+                                <span id="maxSuggestionsValue">5</span>
+                            </div>
+                            <div class="setting-item">
+                                <label for="editDistance">Edit Distance Threshold:</label>
+                                <input type="range" id="editDistance" min="1" max="5" value="2" class="slider">
+                                <span id="editDistanceValue">2</span>
+                            </div>
+                        </div>
+
+                        <div class="settings-section">
+                            <h3>Performance Settings</h3>
+                            <div class="setting-item">
+                                <label for="cacheSize">Cache Size (MB):</label>
+                                <input type="range" id="cacheSize" min="10" max="100" value="50" class="slider">
+                                <span id="cacheSizeValue">50</span>
+                            </div>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="enableLogging" class="checkbox" checked>
+                                    Enable System Logging
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="settings-actions">
+                            <button class="btn btn-secondary" onclick="resetToDefaults()">Reset to Defaults</button>
+                            <button class="btn btn-primary" onclick="saveSystemSettings()">Save Settings</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Import Modal -->
+    <div id="importModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Import Dictionary</h3>
+                <button class="modal-close" onclick="closeImportModal()">&times;</button>
+            </div>
+            <div>
+                <p style="margin-bottom: 1rem; color: #64748b;">Upload a text file with words (one per line) or JSON format.</p>
+                <input type="file" id="importFile" accept=".txt,.json" style="margin-bottom: 1rem; width: 100%;">
+                <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
+                    <button class="btn btn-secondary" onclick="closeImportModal()">Cancel</button>
+                    <button class="btn btn-primary" onclick="importDictionary()">Import</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="trie.js"></script>
+    <script src="spellchecker.js"></script>
+    <script src="analytics.js"></script>
+    <script>
+        // Global variables
+        let trie;
+        let spellChecker;
+        let analytics;
+        let currentUser;
+
+        // Initialize admin dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check authentication
+            currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+            if (!currentUser || currentUser.role !== 'admin') {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Update admin name
+            document.getElementById('adminName').textContent = `Welcome, ${currentUser.name}`;
+
+            // Initialize components
+            initializeComponents();
+            initializeEventListeners();
+            loadData();
+            updateDashboard();
+        });
+
+        function initializeComponents() {
+            trie = new Trie();
+            spellChecker = new SpellChecker(trie);
+            analytics = new Analytics();
+        }
+
+        function initializeEventListeners() {
+            // Navigation
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const view = item.dataset.view;
+                    if (view) {
+                        switchView(view);
+                    }
+                });
+            });
+
+            // Settings sliders
+            const sliders = ['maxSuggestions', 'editDistance', 'cacheSize'];
+            sliders.forEach(id => {
+                const slider = document.getElementById(id);
+                const valueDisplay = document.getElementById(id + 'Value');
+                
+                slider.addEventListener('input', (e) => {
+                    valueDisplay.textContent = e.target.value;
+                });
+            });
+        }
+
+        function switchView(viewName) {
+            // Update navigation
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelector(`[data-view="${viewName}"]`).classList.add('active');
+            
+            // Update views
+            document.querySelectorAll('.view').forEach(view => {
+                view.classList.remove('active');
+            });
+            document.getElementById(`${viewName}-view`).classList.add('active');
+            
+            // Update view-specific content
+            if (viewName === 'dictionary') {
+                updateWordList();
+            } else if (viewName === 'analytics') {
+                updateAnalytics();
+            }
+        }
+
+        function loadData() {
+            try {
+                // Load dictionary data
+                const dictData = localStorage.getItem('spellcheck-dictionary');
+                if (dictData) {
+                    spellChecker.importDictionary(JSON.parse(dictData));
+                }
+                
+                // Load analytics data
+                const analyticsData = localStorage.getItem('spellcheck-analytics');
+                if (analyticsData) {
+                    analytics.importData(JSON.parse(analyticsData));
+                }
+            } catch (error) {
+                console.error('Failed to load data:', error);
+            }
+        }
+
+        function saveData() {
+            try {
+                // Save dictionary data
+                const dictData = spellChecker.exportDictionary();
+                localStorage.setItem('spellcheck-dictionary', JSON.stringify(dictData));
+                
+                // Save analytics data
+                const analyticsData = analytics.exportData();
+                localStorage.setItem('spellcheck-analytics', JSON.stringify(analyticsData));
+            } catch (error) {
+                console.error('Failed to save data:', error);
+            }
+        }
+
+        function updateDashboard() {
+            const stats = spellChecker.getDictionaryStats();
+            const analyticsStats = analytics.getStats();
+            
+            document.getElementById('totalWords').textContent = stats.totalWords.toLocaleString();
+            document.getElementById('customWords').textContent = stats.customWords.toLocaleString();
+            document.getElementById('totalSessions').textContent = '1'; // Mock data
+            document.getElementById('totalErrors').textContent = analyticsStats.totalErrors.toLocaleString();
+        }
+
+        function updateWordList() {
+            const wordList = document.getElementById('wordList');
+            const searchTerm = document.getElementById('searchWords').value.toLowerCase();
+            
+            const allWords = trie.getAllWords();
+            const filteredWords = searchTerm 
+                ? allWords.filter(word => word.toLowerCase().includes(searchTerm))
+                : allWords;
+            
+            wordList.innerHTML = '';
+            
+            if (filteredWords.length === 0) {
+                wordList.innerHTML = '<div style="padding: 2rem; text-align: center; color: #64748b;">No words found</div>';
+                return;
+            }
+            
+            filteredWords.slice(0, 100).forEach(word => {
+                const wordItem = document.createElement('div');
+                wordItem.className = 'word-item';
+                
+                const isCustom = spellChecker.customWords.has(word);
+                
+                wordItem.innerHTML = `
+                    <div>
+                        <span>${word}</span>
+                        ${isCustom ? '<span style="color: #3B82F6; font-size: 0.75rem; margin-left: 0.5rem;">(Custom)</span>' : ''}
+                    </div>
+                    ${isCustom ? `<button class="delete-word-btn" onclick="removeWord('${word}')">Remove</button>` : ''}
+                `;
+                
+                wordList.appendChild(wordItem);
+            });
+        }
+
+        function updateAnalytics() {
+            const stats = analytics.getStats();
+            
+            document.getElementById('analyticsWords').textContent = stats.totalWordsProcessed.toLocaleString();
+            document.getElementById('analyticsSuggestions').textContent = stats.totalSuggestions.toLocaleString();
+            document.getElementById('analyticsErrors').textContent = stats.totalErrors.toLocaleString();
+            document.getElementById('analyticsResponse').textContent = `${stats.averageResponseTime}ms`;
+            
+            // Update frequency charts
+            updateFrequencyChart('adminWordFrequency', analytics.getMostFrequentWords(10));
+            updateFrequencyChart('adminErrorFrequency', analytics.getMostFrequentErrors(10));
+        }
+
+        function updateFrequencyChart(containerId, data) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            
+            if (data.length === 0) {
+                container.innerHTML = '<p style="color: #64748b; text-align: center; padding: 2rem;">No data available</p>';
+                return;
+            }
+            
+            data.forEach(item => {
+                const frequencyItem = document.createElement('div');
+                frequencyItem.className = 'frequency-item';
+                frequencyItem.innerHTML = `
+                    <span class="frequency-word">${item.word}</span>
+                    <span class="frequency-count">${item.frequency}</span>
+                `;
+                container.appendChild(frequencyItem);
+            });
+        }
+
+        function addNewWord() {
+            const input = document.getElementById('newWordInput');
+            const word = input.value.trim();
+            
+            if (!word) return;
+            
+            if (spellChecker.addWord(word)) {
+                input.value = '';
+                updateWordList();
+                updateDashboard();
+                saveData();
+                analytics.addActivity('admin', `Added word "${word}" to dictionary`);
+            } else {
+                alert('Invalid word or word already exists');
+            }
+        }
+
+        function removeWord(word) {
+            if (confirm(`Are you sure you want to remove "${word}" from the dictionary?`)) {
+                if (spellChecker.removeWord(word)) {
+                    updateWordList();
+                    updateDashboard();
+                    saveData();
+                    analytics.addActivity('admin', `Removed word "${word}" from dictionary`);
+                }
+            }
+        }
+
+        function handleAddWordKeypress(event) {
+            if (event.key === 'Enter') {
+                addNewWord();
+            }
+        }
+
+        function filterWords() {
+            updateWordList();
+        }
+
+        function exportDictionary() {
+            const data = spellChecker.exportDictionary();
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `dictionary-export-${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function showImportModal() {
+            document.getElementById('importModal').classList.add('active');
+        }
+
+        function closeImportModal() {
+            document.getElementById('importModal').classList.remove('active');
+        }
+
+        function importDictionary() {
+            const fileInput = document.getElementById('importFile');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                alert('Please select a file to import');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const content = e.target.result;
+                    let words = [];
+                    
+                    if (file.name.endsWith('.json')) {
+                        const data = JSON.parse(content);
+                        if (data.customWords) {
+                            words = data.customWords;
+                        } else if (Array.isArray(data)) {
+                            words = data;
+                        }
+                    } else {
+                        words = content.split('\n').map(word => word.trim()).filter(word => word);
+                    }
+                    
+                    let addedCount = 0;
+                    words.forEach(word => {
+                        if (spellChecker.addWord(word)) {
+                            addedCount++;
+                        }
+                    });
+                    
+                    alert(`Successfully imported ${addedCount} words`);
+                    updateWordList();
+                    updateDashboard();
+                    saveData();
+                    closeImportModal();
+                } catch (error) {
+                    alert('Error importing file: ' + error.message);
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function generateReport() {
+            const report = analytics.generateReport();
+            const timestamp = new Date().toISOString().split('T')[0];
+            
+            const content = `# SpellCheck Pro Admin Report - ${timestamp}
+
+## System Overview
+- Total Words in Dictionary: ${spellChecker.getDictionaryStats().totalWords}
+- Custom Words Added: ${spellChecker.getDictionaryStats().customWords}
+- System Words: ${spellChecker.getDictionaryStats().systemWords}
+
+## Usage Analytics
+- Session Duration: ${report.summary.sessionDuration}
+- Words Processed: ${report.summary.totalWordsProcessed}
+- Suggestions Generated: ${report.summary.totalSuggestions}
+- Spelling Errors Found: ${report.summary.totalErrors}
+- Error Rate: ${report.summary.errorRate}
+- Average Response Time: ${report.summary.averageResponseTime}
+
+## Performance Metrics
+- Average Response Time: ${report.performance.averageResponseTime}
+- Median Response Time: ${report.performance.medianResponseTime}
+- Fastest Response: ${report.performance.fastestResponse}
+- Slowest Response: ${report.performance.slowestResponse}
+- 95th Percentile: ${report.performance.p95ResponseTime}
+
+## Most Frequent Words
+${report.topWords.map(item => `- ${item.word}: ${item.frequency} times`).join('\n')}
+
+## Most Frequent Errors
+${report.topErrors.map(item => `- ${item.word}: ${item.frequency} times`).join('\n')}
+
+## Recent Activity
+${report.recentActivity.map(item => `- [${item.timeAgo}] ${item.description}`).join('\n')}
+
+---
+Generated by SpellCheck Pro Admin Panel on ${new Date().toISOString()}
+Administrator: ${currentUser.name}
+`;
+
+            const blob = new Blob([content], { type: 'text/markdown' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `admin-report-${timestamp}.md`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function resetSystem() {
+            if (confirm('Are you sure you want to reset the entire system? This will clear all custom words and analytics data.')) {
+                if (confirm('This action cannot be undone. Are you absolutely sure?')) {
+                    localStorage.removeItem('spellcheck-dictionary');
+                    localStorage.removeItem('spellcheck-analytics');
+                    localStorage.removeItem('spellcheck-text');
+                    localStorage.removeItem('spellcheck-settings');
+                    
+                    // Reinitialize
+                    initializeComponents();
+                    updateDashboard();
+                    updateWordList();
+                    
+                    alert('System has been reset successfully');
+                }
+            }
+        }
+
+        function saveSystemSettings() {
+            const settings = {
+                maxSuggestions: document.getElementById('maxSuggestions').value,
+                editDistance: document.getElementById('editDistance').value,
+                cacheSize: document.getElementById('cacheSize').value,
+                enableLogging: document.getElementById('enableLogging').checked
+            };
+            
+            localStorage.setItem('admin-settings', JSON.stringify(settings));
+            alert('Settings saved successfully');
+        }
+
+        function resetToDefaults() {
+            document.getElementById('maxSuggestions').value = 5;
+            document.getElementById('maxSuggestionsValue').textContent = 5;
+            document.getElementById('editDistance').value = 2;
+            document.getElementById('editDistanceValue').textContent = 2;
+            document.getElementById('cacheSize').value = 50;
+            document.getElementById('cacheSizeValue').textContent = 50;
+            document.getElementById('enableLogging').checked = true;
+        }
+
+        function logout() {
+            sessionStorage.removeItem('currentUser');
+            window.location.href = 'login.html';
+        }
+
+        // Auto-save every 30 seconds
+        setInterval(saveData, 30000);
+    </script>
+</body>
+</html>
